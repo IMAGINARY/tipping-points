@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <AccelStepper.h>
 
 // arduino cnc shield
 
@@ -19,11 +20,14 @@ int fahren;
 int zaehler = 0;
 int motor_speed;
 int genullt = 0;
+long ziel;
 
 int motordelay;
 int sensorValue;
 int outputValue;
 int rampe = 10000;
+
+AccelStepper stepper(1, STEP_PIN_1, DIR_PIN_1);
 
 void nullen() {
   Serial.println("motor nullfahren");
@@ -69,7 +73,8 @@ void nullen() {
     delayMicroseconds(motordelay);
   }
   Serial.println("nullposition erreicht");
-  delay(500);
+  stepper.setCurrentPosition(0);
+  delay(50);
   genullt = 1;
 
   digitalWrite(DIR_PIN_1, LOW); // set the direction: rechts
@@ -90,21 +95,21 @@ void setup() {
   digitalWrite(EN_PIN, LOW);    // activate driver LOW ist an
   digitalWrite(DIR_PIN_1, LOW); // set the direction: low
 
-  delay(100);
+  delay(500);
 
-  Serial.println(
-      "start ------------------------------------------------------------");
+  Serial.println(">>>>>>>>>>>>>>>>>>> start");
+  sensorValue = analogRead(analogInPin);
+  outputValue = map(sensorValue, 0, 1023, 30, 500);
+  motor_speed = outputValue;
+  Serial.print("motor_speed: ");
+  Serial.println(motor_speed);
 
   nullen();
 
-  sensorValue = analogRead(analogInPin);
-  outputValue = map(sensorValue, 0, 1023, 15000, 1000);
-  motordelay = outputValue;
-  Serial.println("                    start");
-  Serial.println(motordelay);
-
-  motor_speed = rampe;
-  Serial.println(rampe);
+  stepper.setMaxSpeed(
+      motor_speed); // für 1/4 step, höher = schneller, 2000 mx ?
+  stepper.setSpeed(motor_speed);
+  stepper.setAcceleration(motor_speed); // höher = steiler
 }
 
 void loop() {
@@ -113,41 +118,35 @@ void loop() {
   buttonState_2 = digitalRead(BUTTON_PIN_2);
   if (buttonState_2 == LOW) {
     zaehler = 0;
-    digitalWrite(DIR_PIN_1, LOW);
+    ziel = -64000;
+    stepper.moveTo(ziel);
     fahren = 1;
-    Serial.println("2");
   }
   buttonState_3 = digitalRead(BUTTON_PIN_3);
   if (buttonState_3 == LOW) {
     zaehler = 0;
-    digitalWrite(DIR_PIN_1, HIGH);
+    ziel = 64000;
+    stepper.moveTo(ziel);
     fahren = 1;
-    Serial.println("3");
   }
 
   if (fahren == 0) {
-    motor_speed = rampe;
+    stepper.stop();          // Stop as fast as possible: sets new target
+    stepper.runToPosition(); // Now stopped after quickstop
     zaehler++;
     delay(10);
   }
 
-  if (zaehler > 100 * 60 * 5) { // *10 = 10sekunden, 100*60*5
+  if (fahren) {
+    stepper.run();
+    genullt = 0;
+  }
+
+  if (zaehler > 100 * 60 * 5) { // *10 = 10 minuten, 100*60*5
     if (genullt == 0) {
       Serial.println("nullen");
       nullen();
       zaehler = 0;
     }
-  }
-
-  if (fahren) {
-    genullt = 0;
-    if (motor_speed > motordelay) {
-      motor_speed = motor_speed - 50;
-    }
-
-    // Serial.println(motor_speed);
-    schritt = !schritt;
-    digitalWrite(STEP_PIN_1, schritt);
-    delayMicroseconds(motor_speed);
   }
 }

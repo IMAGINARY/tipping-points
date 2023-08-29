@@ -12,8 +12,7 @@ The layout/graphics files are available for the German version of the disc in th
 
 ## Electronics parts list
 
-- Stepper motor: [Nema 23 Bipolar 1.8deg 1.26Nm](https://www.omc-stepperonline.com/de/nema-23-bipolar-1-8deg-1-26nm-178-4oz-in-2-8a-2-5v-57x57x56mm-4-draehte-23hs22-2804s)
-- Locking assembly: [SIG stainless steel 1.4301 bore 6mm](https://www.maedler.de/Article/61510600)
+- Stepper motor: [Nema 17 Stepper Motor Bipolar L=48mm with Gear Ratio 5:1 Planetary Gearbox](https://www.omc-stepperonline.com/de/nema-17-schrittmotor-bipolar-l-48mm-mit-uebersetzungsverhaeltnis-5-1-planetengetriebe-17hs19-1684s-pg5)
 - Micro controller: [Arduino Uno Rev3](https://store.arduino.cc/products/arduino-uno-rev3)
 - Motor driver: [SilentStepStick TMC2100](https://shop.watterott.com/SilentStepStick-TMC2100-5V-V2)
 - Motor shield: [CNC Shield V3 Development Board for A4988 drivers](https://www.az-delivery.de/en/products/az-delivery-cnc-shield-v3)
@@ -22,6 +21,10 @@ The layout/graphics files are available for the German version of the disc in th
   - Back: [Schneider Electric ZB4BZ103](https://www.reichelt.de/de/en/auxiliary-switch-block-for-xb4-2-no-contact-zb4bz103-p221731.html)
   - Front: [Schneider Electric ZB4FD5](https://www.reichelt.de/de/en/frontelement-f-wahlschalter-zb4f-30mm-schwarz-3-stellungen-zb4fd5-p282187.html)
 - Power supply: [Meanwell RS-15-12](https://www.reichelt.de/en/switching-power-supply-15-6-w-1-3-a-12-v-snt-rs-15-12-p137081.html)
+
+Possibly needed for assembly:
+
+- Locking assembly: [SIG stainless steel 1.4301 bore 6mm](https://www.maedler.de/Article/61510600)
 
 ## Micro controller firmware
 
